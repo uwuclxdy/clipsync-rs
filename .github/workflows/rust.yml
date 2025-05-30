@@ -2,79 +2,24 @@ name: Build
 
 on:
   push:
-    tags: [ 'v*' ]
-
-env:
-  CARGO_TERM_COLOR: always
-
+    tags:
+      - "v*"
+ 
 jobs:
   build:
-    name: Build for ${{ matrix.target }}
     runs-on: ${{ matrix.os }}
     strategy:
-      fail-fast: false
       matrix:
-        include:
-          - target: x86_64-unknown-linux-gnu
-            os: ubuntu-latest
-            archive_name: linux-x64
-          - target: x86_64-pc-windows-gnu
-            os: windows-latest
-            archive_name: windows-x64
+        os: [ubuntu-latest, windows-latest]
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-    - name: Setup Rust toolchain
-      uses: dtolnay/rust-toolchain@stable
-      with:
-        targets: ${{ matrix.target }}
+      - name: Set up Rust
+        uses: actions/setup-rust@v1
+        with:
+          rust-version: stable
 
-    - name: Cache cargo dependencies
-      uses: actions/cache@v3
-      with:
-        path: |
-          ~/.cargo/bin/
-          ~/.cargo/registry/index/
-          ~/.cargo/registry/cache/
-          ~/.cargo/git/db/
-          target/
-        key: ${{ runner.os }}-cargo-${{ matrix.target }}-${{ hashFiles('**/Cargo.lock') }}
-        restore-keys: |
-          ${{ runner.os }}-cargo-${{ matrix.target }}-
-          ${{ runner.os }}-cargo-
-
-    - name: Build binary
-      uses: rust-build/rust-build.action@v1.4.5
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        RUSTTARGET: ${{ matrix.target }}
-        ARCHIVE_NAME: ${{ matrix.archive_name }}
-        ARCHIVE_TYPES: zip
-        # UPLOAD_MODE will always be 'release' now because the workflow only runs on tag pushes
-        UPLOAD_MODE: 'release'
-        STATIC_LINKING: true
-        TOOLCHAIN_VERSION: stable
-
-  # Create release on tag push
-  release:
-    name: Create Release
-    runs-on: ubuntu-latest
-    # This 'if' condition is now technically redundant as the whole workflow only runs on tags,
-    # but it doesn't hurt to keep it for clarity or if triggers are changed later.
-    if: startsWith(github.ref, 'refs/tags/')
-    needs: build
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-
-    - name: Create Release
-      uses: softprops/action-gh-release@v1
-      with:
-        draft: false
-        prerelease: ${{ contains(github.ref, 'alpha') || contains(github.ref, 'beta') || contains(github.ref, 'rc') }}
-        generate_release_notes: true
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build
+        run: cargo build --release
