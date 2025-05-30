@@ -371,7 +371,6 @@ dependencies = [
  "egui",
  "env_logger",
  "if-addrs",
- "log",
  "serde",
  "serde_json",
  "tokio",

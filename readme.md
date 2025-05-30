@@ -5,7 +5,7 @@ A lightweight cross-platform clipboard synchronization tool built in Rust. Built
 > For us Linux users: It works both on `X11` and `Wayland` (u might need to install `wl-clipboard`).
 
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
-![Rust Version](https://img.shields.io/badge/rust-2021_edition-orange.svg)
+![Rust Version](https://img.shields.io/badge/rust-2024_edition-orange.svg)
 
 ## Overview
 
