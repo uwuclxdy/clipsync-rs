@@ -1,4 +1,4 @@
-name: Build Rust Binaries
+name: Build
 
 on:
   push:
