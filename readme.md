@@ -6,6 +6,7 @@ A lightweight cross-platform clipboard synchronization tool built in Rust. Built
 
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
 ![Rust Version](https://img.shields.io/badge/rust-2024_edition-orange.svg)
+[![Build](https://github.com/uwuclxdy/clipsync-rs/actions/workflows/rust.yml/badge.svg)](https://github.com/uwuclxdy/clipsync-rs/actions/workflows/rust.yml)
 
 ## Overview
 
